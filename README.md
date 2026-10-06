@@ -62,7 +62,7 @@ flowchart TD
 - **Backend**: Python 3.10+, FastAPI, SQLAlchemy 2.0, Pydantic v2, Uvicorn, Pytest.
 - **Frontend**: Next.js 14+ (App Router), React 18, TypeScript, Tailwind CSS, Lucide React icons.
 - **Database**: Relational SQLite (local/demo), architected with SQLAlchemy ORM for seamless PostgreSQL migration.
-- **AI Integration**: Google Gemini API (`gemini-2.5-flash`) with structured JSON schema validation and rule-based fallback engine for 100% offline reliability.
+- **AI Integration**: Google Gemini API (`gemini-2.5-flash`) with structured JSON schema validation and a rule-based fallback engine for graceful AI-service failure handling.
 
 ---
 
@@ -70,17 +70,17 @@ flowchart TD
 
 ### 1. Clone & Environment Setup
 ```bash
-git clone <repository_url>
-cd policyguard
+git clone https://github.com/Ayankkk29/PolicyGuard.git
+cd PolicyGuard
 
 # Copy environment variables example
-cp .env.example .env
+copy .env.example .env
 ```
 
 ### 2. Backend Setup & Run
 ```bash
 # Navigate to project root
-cd policyguard
+cd PolicyGuard
 
 # Activate Python Virtual Environment
 # Windows:
@@ -92,10 +92,10 @@ source venv/bin/activate
 pip install -r backend/requirements.txt
 
 # Seed initial Policy v2.1 and sample claims
+cd backend
 python -m app.utils.seed
 
 # Launch FastAPI Backend Server
-cd backend
 uvicorn app.main:app --reload --port 8000
 ```
 - **Backend API**: `http://localhost:8000`  
@@ -104,7 +104,7 @@ uvicorn app.main:app --reload --port 8000
 ### 3. Frontend Setup & Run
 Open a second terminal window:
 ```bash
-cd policyguard/frontend
+cd PolicyGuard/frontend
 
 # Install dependencies
 npm install
@@ -116,12 +116,33 @@ npm run dev
 
 ---
 
+## 🧪 Test Results
+
+Backend automated tests:
+
+```text
+9 passed
+```
+
+The test suite covers:
+- valid claims
+- missing required fields
+- negative amounts
+- missing receipts
+- duplicate claims
+- category limit violations
+- ambiguous descriptions
+- reviewer decisions
+- AI/fallback handling
+
+---
+
 ## 🧪 Running Automated Tests
 
 Run the complete Pytest backend test suite:
 
 ```bash
-cd policyguard/backend
+cd PolicyGuard/backend
 ..\venv\Scripts\pytest
 ```
 
