@@ -1,0 +1,41 @@
+# Environment files
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+.pytest_cache/
+backend/.pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+coverage/
+
+# Database artifacts
+*.db
+*.sqlite
+*.sqlite3
+policyguard.db
+backend/policyguard.db
+
+# Editor / tooling metadata
+.vscode/
+*.log
+AGENT_USAGE.md
+frontend/AGENTS.md
+frontend/CLAUDE.md
+
+# OS files
+.DS_Store
+Thumbs.db
