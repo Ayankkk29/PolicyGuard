@@ -5,6 +5,7 @@
 backend/.env
 frontend/.env
 frontend/.env.local
+!frontend/next-env.d.ts
 
 # Python
 __pycache__/
