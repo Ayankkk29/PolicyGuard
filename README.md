@@ -150,22 +150,29 @@ cd PolicyGuard/backend
 
 ## 🚀 Deployment Instructions
 
-### Frontend (Vercel / Netlify)
-1. Push project repository to GitHub.
-2. Import `frontend/` directory into Vercel.
-3. Configure Environment Variable:
-   - `NEXT_PUBLIC_API_URL=https://your-backend-domain.com`
-4. Deploy.
+Recommended setup: Render for the FastAPI backend, Neon for PostgreSQL, and Vercel for the Next.js frontend.
 
-### Backend (Render / Railway / Fly.io / Docker)
-1. Deploy `backend/` directory to Render / Railway / Docker container.
-2. Set Build Command: `pip install -r backend/requirements.txt`
-3. Set Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Configure Environment Variables:
-   - `DATABASE_URL=sqlite:///./policyguard.db` (or PostgreSQL URL `postgresql://user:pass@host/db`)
-   - `AI_API_KEY=your_gemini_api_key`
-   - `AI_MODEL=gemini-2.5-flash`
-5. Execute seed command post-build: `python -m app.utils.seed`.
+### 1. Create the database
+1. Create a PostgreSQL project in Neon.
+2. Copy its connection string. Use the pooled connection string if offered, and ensure it starts with `postgresql://` (not `postgres://`).
+
+### 2. Deploy the backend on Render
+1. In Render, create a new Blueprint and select this GitHub repository. Render reads the root `render.yaml` and configures the API service.
+2. Set the prompted environment values:
+    - `DATABASE_URL`: Neon PostgreSQL connection string.
+    - `AI_API_KEY`: Google Gemini API key. This can be left blank to use the fallback reviewer.
+3. Deploy and verify the service at `https://your-api.onrender.com/`. The response should report `"status": "healthy"`; API docs are at `/docs`.
+4. In the Render service Shell, run `python -m app.utils.seed` once to add the policy and demonstration claims.
+
+### 3. Deploy the frontend on Vercel
+1. Import the same GitHub repository into Vercel.
+2. Set **Root Directory** to `frontend`.
+3. Add `NEXT_PUBLIC_API_URL` with the full Render API origin, for example `https://your-api.onrender.com` (no trailing slash).
+4. Deploy, then update the Render `FRONTEND_URL` value with the Vercel deployment URL if needed and redeploy the backend.
+
+`NEXT_PUBLIC_API_URL` is used during the frontend build, so set it before deploying or redeploy after changing it. Do not use SQLite for hosted data because a local SQLite file may not persist across service restarts or redeploys. Keep API keys in the hosting provider's environment settings, never in Git.
+
+The backend currently allows requests from any browser origin. `FRONTEND_URL` is not currently wired into the CORS middleware, so it is not a required deployment variable.
 
 ---
 
